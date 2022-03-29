@@ -1,0 +1,29 @@
+# 应用名称
+server:
+  port: 8088
+spring:
+  application:
+    name: spring-flink-demo
+  ######################kafka about config ##############################
+  kafka:
+    bootstrap-servers: localhost:9092
+  ##########################producer about config##########################
+    producer:
+      acks: 1
+      batch-size: 16384
+      retries: 0
+      buffer-memory: 33554432
+      #key-serializer: org.apache.kafka.common.serialization.StringSerializer.class
+      #value-serializer: org.apache.kafka.common.serialization.StringSerializer.class
+  ##########################consumer about config##############################
+    consumer:
+      auto-commit-interval: 100
+      enable-auto-commit: true
+      group-id: kafka_group_test
+      #key-deserializer: org.apache.kafka.common.serialization.StringDeserializer.class
+      #value-deserializer: org.apache.kafka.common.serialization.StringDeserializer.class
+    template:
+      topic: test
+      default-topic: test
+
+
