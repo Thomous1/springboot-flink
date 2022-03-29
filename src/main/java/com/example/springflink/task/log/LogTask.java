@@ -3,6 +3,7 @@ package com.example.springflink.task.log;
 import com.example.springflink.checkpoint.CheckPoint;
 import com.example.springflink.checkpoint.StateBackend;
 import com.example.springflink.config.KafkaConfig;
+import com.example.springflink.filter.LogFilterFunction;
 import com.example.springflink.map.LogMapFunction;
 import com.example.springflink.process.LogProcessFunction;
 import com.example.springflink.sink.LogSink;
@@ -37,6 +38,7 @@ public class LogTask {
         dataStreamSource
             .setParallelism(1)
             .map(new LogMapFunction())
+            .filter(new LogFilterFunction())
             .process(new LogProcessFunction())
             .addSink(new LogSink());
         try {

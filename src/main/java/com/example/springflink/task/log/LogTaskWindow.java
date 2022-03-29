@@ -3,9 +3,8 @@ package com.example.springflink.task.log;
 import com.example.springflink.checkpoint.CheckPoint;
 import com.example.springflink.checkpoint.StateBackend;
 import com.example.springflink.config.KafkaConfig;
-import com.example.springflink.domain.LogEntity;
+import com.example.springflink.filter.LogFilterFunction;
 import com.example.springflink.map.LogMapFunction;
-import com.example.springflink.process.LogProcessFunction;
 import com.example.springflink.process.LogProcessWindowFunction;
 import com.example.springflink.sink.LogSink;
 import com.example.springflink.utils.ApplicationContextUtil;
@@ -14,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
@@ -39,6 +36,7 @@ public class LogTaskWindow {
             .addSource(new FlinkKafkaConsumer<String>(kafkaConfig.getTopic(),new SimpleStringSchema(),properties));
         dataStreamSource
             .map(new LogMapFunction())
+            .filter(new LogFilterFunction())
             .timeWindowAll(Time.seconds(5L), Time.seconds(5L))
             .process(new LogProcessWindowFunction())
             .addSink(new LogSink());
