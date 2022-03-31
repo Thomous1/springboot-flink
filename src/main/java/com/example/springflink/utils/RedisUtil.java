@@ -2,6 +2,7 @@ package com.example.springflink.utils;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -23,23 +26,30 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisUtil {
 
-    private Jedis redisTemplate;
+    private static Jedis redisTemplate;
+    private static JedisPool jedisPool;
 
     public RedisUtil() {
         redisTemplate = getClient();
     }
 
     public static Jedis getClient() {
-        Config config = ConfigFactory.load("redis.conf").resolve();
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxTotal(config.getInt("max_total")); //最大连接数
-        jedisPoolConfig.setMaxIdle(config.getInt("max_idle")); //最大空闲
-        jedisPoolConfig.setMinIdle(config.getInt("min_idle")); //最小空闲
-        jedisPoolConfig.setBlockWhenExhausted(config.getBoolean("block_when_exhausted")); //忙碌时是否等待
-        jedisPoolConfig.setMaxWaitMillis(config.getInt("max_total")); //忙碌时等待时长 毫秒
-        jedisPoolConfig.setTestOnBorrow(config.getBoolean("test_on_borrow")); //每次获得连接的进行测试
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, config.getString("host"), config.getInt("port"));
-        return jedisPool.getResource();
+        return getPool().getResource();
+    }
+
+    public static JedisPool getPool() {
+        if (jedisPool == null) {
+            Config config = ConfigFactory.load("redis.conf").resolve();
+            JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+            jedisPoolConfig.setMaxTotal(config.getInt("max_total")); //最大连接数
+            jedisPoolConfig.setMaxIdle(config.getInt("max_idle")); //最大空闲
+            jedisPoolConfig.setMinIdle(config.getInt("min_idle")); //最小空闲
+            jedisPoolConfig.setBlockWhenExhausted(config.getBoolean("block_when_exhausted")); //忙碌时是否等待
+            jedisPoolConfig.setMaxWaitMillis(config.getInt("max_total")); //忙碌时等待时长 毫秒
+            jedisPoolConfig.setTestOnBorrow(config.getBoolean("test_on_borrow")); //每次获得连接的进行测试
+            jedisPool = new JedisPool(jedisPoolConfig, config.getString("host"), config.getInt("port"));
+        }
+        return jedisPool;
     }
 
   // =============================common============================
