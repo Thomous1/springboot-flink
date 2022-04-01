@@ -6,7 +6,7 @@ local capacity = tonumber(ARGV[2]) -- burstCapacity 令牌桶上限
 local now = tonumber(ARGV[3]) -- 得到从 1970-01-01 00:00:00 开始的毫秒数
 local requested = tonumber(ARGV[4]) -- 消耗令牌数量，默认 1
 
-local fill_time = capacity/rate -- 计算令牌桶填充满令牌需要多久时间
+local fill_time = capacity/rate/1000 -- 计算令牌桶填充满令牌需要多久时间
 local ttl = math.floor(fill_time*2)  -- *2 保证时间充足
 
 

@@ -52,7 +52,7 @@ public class RedisRateLimiter {
         try {
             List<String> keys = getKeys(routerConfig.getKey());
             List<String> scriptArgs = Arrays.asList(replenishRate + "",burstCapacity + "",
-                Instant.now().getEpochSecond() + "", "1");
+                System.currentTimeMillis() + "", "1");
             @Cleanup Jedis jedis = pool.getResource();
             Flux<List<Long>> luaResult = Flux.just((List<Long>) jedis.eval(script, keys, scriptArgs));
             return luaResult.onErrorResume(throwable -> Flux.just(Arrays.asList(1L, -1L)))
