@@ -25,5 +25,13 @@ spring:
     template:
       topic: test
       default-topic: test
-
-
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 30000
