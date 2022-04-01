@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 /**
@@ -51,7 +53,8 @@ public class RedisRateLimiter {
             List<String> keys = getKeys(routerConfig.getKey());
             List<String> scriptArgs = Arrays.asList(replenishRate + "",burstCapacity + "",
                 Instant.now().getEpochSecond() + "", "1");
-            Flux<List<Long>> luaResult = Flux.just((List<Long>) pool.getResource().eval(script, keys, scriptArgs));
+            @Cleanup Jedis jedis = pool.getResource();
+            Flux<List<Long>> luaResult = Flux.just((List<Long>) jedis.eval(script, keys, scriptArgs));
             return luaResult.onErrorResume(throwable -> Flux.just(Arrays.asList(1L, -1L)))
                 .reduce(new ArrayList<>(), ((response, l) -> {
                     response.addAll(l);
