@@ -17,8 +17,8 @@ public class SpringFlinkApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //LogTask.main(args);
-        LogTaskWindow.main(args);
+        // LogTask.main(args);
+        // LogTaskWindow.main(args);
     }
 
 }

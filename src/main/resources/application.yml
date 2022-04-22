@@ -35,3 +35,12 @@ spring:
         max-idle: 8
         min-idle: 0
     timeout: 30000
+
+hbase:
+  rootdir: hdfs://localhost:9000/hbase
+  zookeeper:
+    quorum: localhost
+  client:
+    period: 1000
+  rpc:
+    timeout: 1000

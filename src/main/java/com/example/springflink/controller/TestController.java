@@ -1,5 +1,6 @@
 package com.example.springflink.controller;
 
+import com.example.springflink.anno.MyRateLimiter;
 import com.example.springflink.redis.RedisRateLimiter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ public class TestController {
     RedisRateLimiter redisRateLimiter;
 
     @RequestMapping("/get/{name}")
+    @MyRateLimiter(value = "test")
     public Mono<String> test(@PathVariable("name") String name) {
         AtomicBoolean flag = new AtomicBoolean(false);
         redisRateLimiter.isAllowed("test").subscribe(response -> {
