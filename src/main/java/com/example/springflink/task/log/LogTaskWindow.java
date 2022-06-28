@@ -37,7 +37,7 @@ public class LogTaskWindow {
         dataStreamSource
             .map(new LogMapFunction())
             .filter(new LogFilterFunction())
-            .timeWindowAll(Time.seconds(5L), Time.seconds(5L))
+            .timeWindowAll(Time.seconds(5L))
             .process(new LogProcessWindowFunction())
             .addSink(new LogSink());
         try {
