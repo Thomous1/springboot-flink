@@ -1,6 +1,5 @@
 package com.example.springflink.checkpoint;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 

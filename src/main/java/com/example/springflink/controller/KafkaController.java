@@ -1,3 +1,4 @@
+/*
 package com.example.springflink.controller;
 
 import com.example.springflink.domain.LogEntity;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+*/
 /**
  * @author wangzuoyu1
  * @description
- */
+ *//*
+
 
 @RestController
 @RequestMapping("/kafka")
@@ -81,3 +84,4 @@ public class KafkaController {
         return "success";
     }
 }
+*/

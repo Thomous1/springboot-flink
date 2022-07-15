@@ -1,3 +1,4 @@
+/*
 package com.example.springflink.controller;
 
 import com.example.springflink.anno.MyRateLimiter;
@@ -9,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+*/
 /**
  * @author wangzuoyu1
- */
+ *//*
+
 
 @RestController
 @RequestMapping("/test")
@@ -35,3 +38,4 @@ public class TestController {
         throw new RuntimeException("error！！！！");
     }
 }
+*/

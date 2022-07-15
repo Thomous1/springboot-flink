@@ -1,3 +1,4 @@
+/*
 package com.example.springflink.config;
 
 import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
@@ -19,10 +20,12 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
+*/
 /**
  * @author wangzuoyu1
  * @description
- */
+ *//*
+
 
 @Data
 @ConfigurationProperties("spring.redis")
@@ -95,3 +98,4 @@ public class RedisConfig {
 
 }
 
+*/

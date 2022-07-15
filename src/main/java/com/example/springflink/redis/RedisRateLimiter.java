@@ -1,3 +1,4 @@
+/*
 package com.example.springflink.redis;
 
 import com.example.springflink.redis.domain.Response;
@@ -22,10 +23,12 @@ import reactor.core.publisher.Mono;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+*/
 /**
  * @author wangzuoyu1
  * @description
- */
+ *//*
+
 
 @Component
 public class RedisRateLimiter {
@@ -72,11 +75,13 @@ public class RedisRateLimiter {
     }
 
 
-    /**
+    */
+/**
      * 生成tokens_key 和timestamp_key
      * @param id
      * @return
-     */
+     *//*
+
     private List<String> getKeys(String id) {
         String prefix = "request_rate_limiter.{" + id;
         String tokenKey = prefix + "}.tokens";
@@ -101,3 +106,4 @@ public class RedisRateLimiter {
     }
 
 }
+*/

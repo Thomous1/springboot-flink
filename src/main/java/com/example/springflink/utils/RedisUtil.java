@@ -2,20 +2,11 @@ package com.example.springflink.utils;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -26,11 +17,11 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisUtil {
 
-    private static Jedis redisTemplate;
+    private static Jedis jedis;
     private static JedisPool jedisPool;
 
     public RedisUtil() {
-        redisTemplate = getClient();
+        jedis = getClient();
     }
 
     public static Jedis getClient() {
@@ -62,7 +53,7 @@ public class RedisUtil {
     public boolean expire(String key, int time) {
         try {
             if (time > 0) {
-                redisTemplate.expire(key, time);
+                jedis.expire(key, time);
             }
             return true;
         } catch (Exception e) {
@@ -77,7 +68,7 @@ public class RedisUtil {
      * @return 时间(秒) 返回0代表为永久有效
      */
     public long getExpire(String key) {
-        return redisTemplate.ttl(key);
+        return jedis.ttl(key);
     }
 
     /**
@@ -87,7 +78,7 @@ public class RedisUtil {
      */
     public boolean hasKey(String key) {
         try {
-            return redisTemplate.exists(key);
+            return jedis.exists(key);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -100,7 +91,7 @@ public class RedisUtil {
      */
     @SuppressWarnings("unchecked")
     public void del(String... key) {
-         redisTemplate.del(key);
+         jedis.del(key);
     }
 
     // ============================String=============================
@@ -110,7 +101,7 @@ public class RedisUtil {
      * @return 值
      */
     public String get(String key) {
-        return key == null ? null : redisTemplate.get(key);
+        return key == null ? null : jedis.get(key);
     }
 
     /**
@@ -121,7 +112,7 @@ public class RedisUtil {
      */
     public boolean set(String key, String value) {
         try {
-            redisTemplate.set(key, value);
+            jedis.set(key, value);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,7 +131,7 @@ public class RedisUtil {
         if (delta < 0) {
             throw new RuntimeException("递增因子必须大于0");
         }
-        return redisTemplate.incrBy(key, delta);
+        return jedis.incrBy(key, delta);
     }
 
     /**
@@ -153,7 +144,7 @@ public class RedisUtil {
         if (delta < 0) {
             throw new RuntimeException("递减因子必须大于0");
         }
-        return redisTemplate.incrBy(key, -delta);
+        return jedis.incrBy(key, -delta);
     }
 
     // ================================Map=================================
@@ -164,7 +155,7 @@ public class RedisUtil {
      * @return 值
      */
     public String hget(String key, String item) {
-        return redisTemplate.hget(key, item);
+        return jedis.hget(key, item);
     }
 
     /**
@@ -173,7 +164,7 @@ public class RedisUtil {
      * @return 对应的多个键值
      */
     public Map<String, String> hmget(String key) {
-        return redisTemplate.hgetAll(key);
+        return jedis.hgetAll(key);
     }
 
     /**
@@ -184,7 +175,7 @@ public class RedisUtil {
      */
     public boolean hmset(String key, Map<String, String> map) {
         try {
-            redisTemplate.hmset(key, map);
+            jedis.hmset(key, map);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,7 +192,7 @@ public class RedisUtil {
      */
     public boolean hmset(String key, Map<String, String> map, int time) {
         try {
-            redisTemplate.hmset(key, map);
+            jedis.hmset(key, map);
             if (time > 0) {
                 expire(key, time);
             }
@@ -221,7 +212,7 @@ public class RedisUtil {
      */
     public boolean hset(String key, String item, String value) {
         try {
-            redisTemplate.hset(key, item, value);
+            jedis.hset(key, item, value);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,7 +230,7 @@ public class RedisUtil {
      */
     public boolean hset(String key, String item, String value, int time) {
         try {
-            redisTemplate.hset(key, item, value);
+            jedis.hset(key, item, value);
             if (time > 0) {
                 expire(key, time);
             }
@@ -256,7 +247,7 @@ public class RedisUtil {
      * @param item 项 可以使多个 不能为null
      */
     public void hdel(String key, String... item) {
-        redisTemplate.hdel(key, item);
+        jedis.hdel(key, item);
     }
 
     /**
@@ -266,7 +257,7 @@ public class RedisUtil {
      * @return true 存在 false不存在
      */
     public boolean hHasKey(String key, String item) {
-        return redisTemplate.hexists(key, item);
+        return jedis.hexists(key, item);
     }
 
     /**
@@ -277,7 +268,7 @@ public class RedisUtil {
      * @return
      */
     public double hincr(String key, String item, int by) {
-        return redisTemplate.hincrBy(key, item, by);
+        return jedis.hincrBy(key, item, by);
     }
 
     /**
@@ -288,7 +279,7 @@ public class RedisUtil {
      * @return
      */
     public double hdecr(String key, String item, int by) {
-        return redisTemplate.hincrBy(key, item, -by);
+        return jedis.hincrBy(key, item, -by);
     }
 
     // ============================set=============================
@@ -299,7 +290,7 @@ public class RedisUtil {
      */
     public Set<String> sGet(String key) {
         try {
-            return redisTemplate.smembers(key);
+            return jedis.smembers(key);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -314,7 +305,7 @@ public class RedisUtil {
      */
     public long sSet(String key, String... values) {
         try {
-            return redisTemplate.sadd(key, values);
+            return jedis.sadd(key, values);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -330,7 +321,7 @@ public class RedisUtil {
      */
     public long sSetAndTime(String key, int time, String... values) {
         try {
-            Long count = redisTemplate.sadd(key, values);
+            Long count = jedis.sadd(key, values);
             if (time > 0)
                 expire(key, time);
             return count;
@@ -347,7 +338,7 @@ public class RedisUtil {
      */
     public long sGetSetSize(String key) {
         try {
-            return redisTemplate.strlen(key);
+            return jedis.strlen(key);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -362,7 +353,7 @@ public class RedisUtil {
      */
     public long setRemove(String key, String... values) {
         try {
-            Long count = redisTemplate.srem(key, values);
+            Long count = jedis.srem(key, values);
             return count;
         } catch (Exception e) {
             e.printStackTrace();
@@ -380,7 +371,7 @@ public class RedisUtil {
      */
     public List<String> lGet(String key, long start, long end) {
         try {
-            return redisTemplate.lrange(key, start, end);
+            return jedis.lrange(key, start, end);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -395,7 +386,7 @@ public class RedisUtil {
      */
     public String lGetIndex(String key, long index) {
         try {
-            return redisTemplate.lindex(key, index);
+            return jedis.lindex(key, index);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -410,7 +401,7 @@ public class RedisUtil {
      */
     public boolean lSet(String key, String value) {
         try {
-            redisTemplate.rpush(key, value);
+            jedis.rpush(key, value);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -427,7 +418,7 @@ public class RedisUtil {
      */
     public boolean lSet(String key, long index,String value, int time) {
         try {
-            redisTemplate.lset(key, index, value);
+            jedis.lset(key, index, value);
             if (time > 0)
                 expire(key, time);
             return true;

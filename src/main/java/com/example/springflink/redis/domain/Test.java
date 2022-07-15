@@ -1,12 +1,15 @@
+/*
 package com.example.springflink.redis.domain;
 
 import com.example.springflink.redis.RedisRateLimiter;
 
 
+*/
 /**
  * @author wangzuoyu1
  * @description
- */
+ *//*
+
 public class Test {
 
     public static void main(String[] args) throws InterruptedException {
@@ -25,3 +28,4 @@ public class Test {
         }
     }
 }
+*/
